@@ -3,9 +3,27 @@ networks:
     kafka-net:
         driver: bridge
 services:
+    kafka-ui:
+        container_name: kafka-ui
+        image: provectuslabs/kafka-ui:latest
+        depends_on:
+            - kafka-node1
+            - kafka-node2
+            - kafka-node3
+        ports:
+            - "9000:9000"
+        environment:
+            DYNAMIC_CONFIG_ENABLED: true
+            SERVER_PORT: "9000"
+            KAFKA_CLUSTERS_0_NAME: kafka-demo
+            KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka-node1:9092
+        networks:
+            - kafka-net
+        volumes:
+            - ~/.kui/config.yml:/etc/kafkaui/dynamic_config.yaml
     kafka-node1:
         container_name: kafka-node1
-        image: codelearn-kafka-jre17-debian
+        image: kafka-jre17-debian
         build:
             context: .
         ports:
@@ -17,7 +35,7 @@ services:
             - ./data/kafka-node1/:/data/kafka/
     kafka-node2:
         container_name: kafka-node2
-        image: codelearn-kafka-jre17-debian
+        image: kafka-jre17-debian
         build:
             context: .
         ports:
@@ -29,7 +47,7 @@ services:
             - ./data/kafka-node2/:/data/kafka/
     kafka-node3:
         container_name: kafka-node3
-        image: codelearn-kafka-jre17-debian
+        image: kafka-jre17-debian
         build:
             context: .
         ports:
