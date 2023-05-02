@@ -32,7 +32,7 @@ public class ProducerServiceImpl extends BaseComponent implements ProducerServic
 	private final AtomicLong sequence = new AtomicLong(1);
 
 	@Override
-	//	@Scheduled(cron = "0/10 * * * * ?")
+	@Scheduled(cron = "0/10 * * * * ?")
 	public void produceSampleMessage() {
 		LongStream.range(0, NUM_OF_MESSAGES).forEach(i -> {
 			sampleProducer.sendMessageWithKey(genericTopic, ThreadLocalRandom.current().nextLong(0, 10),
@@ -57,7 +57,7 @@ public class ProducerServiceImpl extends BaseComponent implements ProducerServic
 	}
 
 	@Override
-	@Scheduled(cron = "0/10 * * * * ?")
+	@Scheduled(cron = "0/15 * * * * ?")
 	public void produceMultipleMessageTypesUsingRouting() {
 		if (ThreadLocalRandom.current().nextBoolean()) {
 			sampleProducer.sendUsingRouting(customerTopic, ThreadLocalRandom.current().nextLong(0, 10),
